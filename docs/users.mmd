@@ -1,0 +1,30 @@
+erDiagram
+    users ||--o{ sessions : "has"
+    users ||--o{ business_profiles : "has"
+
+    users {
+        uuid id PK
+        string email
+        string password_hash
+        enum role
+        timestamp created_at
+        boolean is_active
+    }
+
+    sessions {
+        uuid id PK
+        uuid user_id FK
+        string token
+        timestamp expires_at
+        string ip_address
+    }
+
+    business_profiles {
+        uuid id PK
+        uuid user_id FK
+        string company_name
+        string contact_email
+        string tax_id
+        timestamp created_at
+        timestamp updated_at
+    }
