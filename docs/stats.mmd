@@ -1,0 +1,33 @@
+erDiagram
+    promocodes ||--o{ views : "has"
+    promocodes ||--o{ likes : "has"
+    promocodes ||--o{ comments_stats : "has"
+
+    views {
+        String promocode_id
+        String user_id
+        DateTime64(3) viewed_at
+        LowCardinality(String) device_type
+        LowCardinality(String) location
+        LowCardinality(String) browser
+    }
+
+    likes {
+        String promocode_id
+        String user_id
+        DateTime64 liked_at
+        Enum8 reaction_type
+        LowCardinality(String) device_type
+        LowCardinality(String) location
+        LowCardinality(String) browser
+    }
+
+    comments_stats {
+        String promocode_id
+        UInt32 comment_count
+        UInt32 reply_count
+        DateTime64(3) last_comment_time
+        String last_comment_author FK
+        DateTime64(3) last_updated
+        UInt32 unique_commenters
+    }

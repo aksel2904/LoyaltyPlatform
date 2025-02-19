@@ -1,0 +1,36 @@
+erDiagram
+    users ||--o{ comments : "creates"
+    users ||--o{ comment_replies : "creates"
+    promocodes ||--o{ comments : "has"
+    comments ||--o{ comment_replies : "has replies"
+
+    promocodes {
+        uuid id PK
+        string code
+        text description
+        uuid business_id
+        timestamp start_date
+        timestamp end_date
+        double discount
+        int is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    comments {
+        uuid id PK
+        uuid promocode_id FK
+        uuid user_id
+        text content
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    comment_replies {
+        uuid id PK
+        uuid comment_id FK
+        uuid user_id
+        text content
+        timestamp created_at
+        timestamp updated_at
+    }
