@@ -1,0 +1,100 @@
+specification {
+    element actor {
+        style {
+            color amber
+        }
+    }
+    element softwareSystem
+    element container
+    
+}
+
+model {
+    person = actor 'Пользователь' {
+        style {
+            shape person 
+        }
+    }
+
+    loyalty_platform = softwareSystem "Платформа лояльности" {
+        style {
+            shape browser 
+        }
+        apiGateway = container "API Gateway" {
+            description "Единая точка входа для UI"
+            technology "Node.js, Express"
+        }
+
+        userService = container "User Service" {
+            technology 'Java, Spring Boot'
+            description 'Регистрация, аутентификация, управление пользователями'
+        }
+
+        statisticsService = container "Statistics Service" {
+            description "Сбор статистики"
+            technology "Python, FastAPI"
+        }
+
+        promoService = container "Promo Service" {
+            description "Управление промокодами и комментариями"
+            technology "Java, Spring Boot"
+        }
+
+        clickHouse = container "ClickHouse" {
+            style {
+                shape storage
+            }
+            description "Хранилище статистики"
+        }
+
+        cassandra = container "Cassandra" {
+            style {
+                shape storage
+            }
+            icon tech:cassandra
+            description "Хранилище промокодов и комментариев"
+        }
+
+        postgresDb = container "PostgreSQL" {
+            style {
+                shape storage
+            }
+            description "Хранилище пользователей"
+            icon tech:postgresql
+        }
+
+        kafka = container "Kafka" {
+            style {
+                shape queue
+            }
+            icon tech:kafka
+            description 'Брокер событий'
+        }
+    }
+    person -> loyalty_platform.apiGateway "Использует" "HTTPS"
+    
+    loyalty_platform.apiGateway -> loyalty_platform.userService "REST API" "HTTP"
+    loyalty_platform.apiGateway -> loyalty_platform.promoService "REST API" "HTTP"
+    loyalty_platform.apiGateway -> loyalty_platform.statisticsService "REST API" "HTTP"
+
+    loyalty_platform.statisticsService -> loyalty_platform.clickHouse "Читает/Пишет" "ClickHouse SQL"
+    loyalty_platform.promoService -> loyalty_platform.cassandra "Читает/Пишет" "CQL"
+    loyalty_platform.userService -> loyalty_platform.postgresDb "Читает/Пишет" "SQL"
+
+    loyalty_platform.promoService -> loyalty_platform.kafka "Пишет события" "Kafka Protocol"
+    loyalty_platform.statisticsService -> loyalty_platform.kafka  "Подписывается на события" "Kafka Protocol"
+
+}
+
+
+
+
+views {
+   /**
+    * @likec4-generated(v1)
+    * iKRoYXNo2Sg5MjAyNjQ2MzZkZTQ1M2M2YzAwOTdmYmI3ODUxZjU3YWJlMWZmNTA5qmF1dG9MYXlvdXSBqWRpcmVjdGlvbqJUQqF4MaF5zQEYpXdpZHRozQFPpmhlaWdodM0CEKVub2Rlc4KmcGVyc29ugqFilEDNAnTNAUDMtKFjwrBsb3lhbHR5X3BsYXRmb3JtgqFilDHNARjNAUDMtKFjwqVlZGdlc4GnMTRnNmNjbIOiY3CRgqF4zOahec0CA6FshKF4zOahec0CIKV3aWR0aFKmaGVpZ2h0J6FwlJLM7c0CMJLM6c0CE5LM5M0B85LM4M0B1g==
+    */
+   view index {
+        include *
+    }
+}
